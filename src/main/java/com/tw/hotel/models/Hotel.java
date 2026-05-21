@@ -14,10 +14,10 @@ public class Hotel {
     private final int roomsAvailable;
     private final String city;
 
-    public Hotel(String id, String hotelName, int rooms, String city) {
+    public Hotel(String id, String name, int roomsAvailable, String city) {
         this.id = id;
-        this.name = hotelName;
-        this.roomsAvailable = rooms;
+        this.name = name;
+        this.roomsAvailable = roomsAvailable;
         this.city = city;
     }
 

@@ -1,13 +1,13 @@
 package com.tw.hotel.controllers;
 
 import com.tw.hotel.service.HotelService;
+import com.tw.hotel.views.BookHotelRequest;
+import com.tw.hotel.views.BookingView;
 import com.tw.hotel.views.HotelView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +27,12 @@ public class HotelController {
         return ResponseEntity.ok(hotelService.getHotelsInCity(city));
     }
 
+    @PostMapping("api/bookings")
+    public ResponseEntity<BookingView> bookHotel(@RequestBody BookHotelRequest bookHotelRequest){
+        BookingView bookingView = hotelService.bookHotel(bookHotelRequest.hotel_id(), bookHotelRequest.rooms(), "user1");
+        return ResponseEntity.ok(bookingView);
+    }
+
 }
+
+
