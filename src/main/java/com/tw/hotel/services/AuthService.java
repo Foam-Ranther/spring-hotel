@@ -1,44 +1,52 @@
 package com.tw.hotel.services;
 
 import com.tw.hotel.dto.UserRequest;
-import org.springframework.security.core.userdetails.User;
+import com.tw.hotel.models.User;
+import com.tw.hotel.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import static aQute.bnd.annotation.headers.Category.users;
+
 public class AuthService implements UserDetailsService {
-    private final ConcurrentHashMap<String, UserDetails> users;
   private final PasswordEncoder passwordEncoder;
+  private UserRepository userRepository;
 
-  public AuthService(ConcurrentHashMap<String, UserDetails> users, PasswordEncoder passwordEncoder) {
-        this.users = users;
+  public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
+    this.userRepository = userRepository;
   }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = this.users.get(username);
+        User user = this.userRepository.getUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Invalid User Details");
         }
-        return user;
+      UserDetails userDetail = org.springframework.security.core.userdetails.User
+              .builder()
+              .username(username)
+              .passwordEncoder(passwordEncoder::encode)
+              .build();
+      return userDetail;
     }
 
     public String registerUser(UserRequest userRequest) {
-        UserDetails user = User
-                .builder()
-                .passwordEncoder(passwordEncoder::encode)
-                .password(userRequest.password())
-                .username(userRequest.username())
-                .build();
-        users.put(user.getUsername(), user);
-        return user.getUsername();
+      User user = new User(userRequest.username(), userRequest.password());
+      userRepository.save(user);
+      return "successfully registered";
     }
 
     public boolean loginUser(UserRequest user) {
-      return users.containsKey(user.username());
+      User userByUsername = userRepository.getUserByUsername(user.username());
+      if (userByUsername == null) { throw new UsernameNotFoundException("Invalid username");};
+      return true;
     }
+
 }

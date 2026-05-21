@@ -29,15 +29,6 @@ public class AuthController {
   public ResponseEntity<?> login (@RequestBody UserRequest user) {
     if (authService.loginUser(user)) {
       String token = jwtService.generateToken(user.username());
-//      ResponseCookie cookie = ResponseCookie.from("jwt", token)
-//              .httpOnly(true)
-//              .secure(true)
-//              .sameSite("Strict")
-//              .path("/")
-//              .maxAge(Duration.ofMillis(EXPIRATION_TIME))
-//              .build();
-//      return ResponseEntity.status(201).header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
-
       return ResponseEntity.ok()
               .header("Authorization", "Bearer " + token)
               .body("Login successful");
@@ -46,6 +37,6 @@ public class AuthController {
   }
   @PostMapping("/register")
   public String register (@RequestBody UserRequest user) {
-    return "hello";
+    return authService.registerUser(user);
   }
 }

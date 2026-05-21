@@ -1,6 +1,8 @@
 package com.tw.hotel.config;
 
+import com.tw.hotel.repository.UserRepository;
 import com.tw.hotel.services.AuthService;
+import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,17 +23,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
 
         http
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/login", "/api/search/**", "/api/users/login").permitAll()
+                        auth.requestMatchers("/login", "/api/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(fl -> fl.loginProcessingUrl("/login"))
         ;
 
@@ -38,17 +43,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthService appUserDetailsService(PasswordEncoder passwordEncoder) {
-        ConcurrentHashMap<String, UserDetails> users = new ConcurrentHashMap<>();
-        UserDetails user = User.builder()
-                .passwordEncoder(passwordEncoder::encode)
-                .username("test")
-                .password("test@1234")
-                .build();
-
-        users.put(user.getUsername(), user);
-        return new AuthService(users,passwordEncoder);
+    public AuthService appUserDetailsService(PasswordEncoder passwordEncoder, UserRepository users) {
+        return new AuthService(passwordEncoder,users);
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
 
