@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class AuthController {
-  @PostMapping("/login")
-  public String login (@RequestBody UserRequest user) {
+    @PostMapping("/login")
+    public String login(@RequestBody UserRequest user) {
 
-    return "hello";
-  }
+        return "hello";
+    }
 }

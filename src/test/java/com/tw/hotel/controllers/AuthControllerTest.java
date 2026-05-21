@@ -7,25 +7,25 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureRestTestClient
 class AuthControllerTest {
 
-  @Autowired
-  private RestTestClient client;
+    @Autowired
+    private RestTestClient client;
 
-  @Test
-  void testForLoginPage() {
-    AuthController authController = new AuthController();
-    String responseBody = client.post()
-            .uri("/api/users/login")
-            .body(new UserRequest("yash", "yash@1234"))
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(String.class)
-            .returnResult().getResponseBody();
-    assertEquals("hello", responseBody);
-  }
+    @Test
+    void testForLoginPage() {
+        AuthController authController = new AuthController();
+        String responseBody = client.post()
+                .uri("/api/users/login")
+                .body(new UserRequest("yash", "yash@1234"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseBody();
+        assertEquals("hello", responseBody);
+    }
 }
