@@ -1,6 +1,6 @@
 package com.tw.hotel.controllers;
 
-import com.tw.hotel.dto.UsersRequest;
+import com.tw.hotel.dto.UserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
@@ -21,12 +21,11 @@ class AuthControllerTest {
     AuthController authController = new AuthController();
     String responseBody = client.post()
             .uri("/api/users/login")
-            .body(new UsersRequest("yash", "yash@1234"))
+            .body(new UserRequest("yash", "yash@1234"))
             .exchange()
             .expectStatus().isOk()
             .expectBody(String.class)
             .returnResult().getResponseBody();
     assertEquals("hello", responseBody);
-
   }
 }
