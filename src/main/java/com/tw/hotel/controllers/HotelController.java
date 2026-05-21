@@ -4,6 +4,7 @@ import com.tw.hotel.service.HotelService;
 import com.tw.hotel.views.BookHotelRequest;
 import com.tw.hotel.views.BookingView;
 import com.tw.hotel.views.HotelView;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/api")
 public class HotelController {
     private final HotelService hotelService;
     private static final Logger logger = LoggerFactory.getLogger(HotelController.class);
@@ -21,16 +23,22 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @GetMapping("api/search/hotels")
+    @GetMapping("/search/hotels")
     public ResponseEntity<List<HotelView>> getHotels(@RequestParam String city) {
         logger.info("Received request for hotels in {}", city);
         return ResponseEntity.ok(hotelService.getHotelsInCity(city));
     }
 
-    @PostMapping("api/bookings")
+    @PostMapping("/bookings")
     public ResponseEntity<BookingView> bookHotel(@RequestBody BookHotelRequest bookHotelRequest){
         BookingView bookingView = hotelService.bookHotel(bookHotelRequest.hotel_id(), bookHotelRequest.rooms(), "user1");
         return ResponseEntity.ok(bookingView);
+    }
+
+    @GetMapping("/bookings")
+    public ResponseEntity<List<BookingView>> listBookings(){
+        List<BookingView> bookings = hotelService.listBookings("user1");
+        return  ResponseEntity.ok(bookings);
     }
 
 }

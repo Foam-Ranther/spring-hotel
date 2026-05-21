@@ -28,6 +28,9 @@ public class HotelService {
     public List<HotelView> getHotelsInCity(String city) {
         return hotelRepository.findHotelsByCity(city).stream().map(Hotel::view).toList();
     }
-    
-    
+
+
+    public List<BookingView> listBookings(String userId) {
+        return bookingRepository.findBookingsByUserId(userId).stream().map(Booking::view).toList();
+    }
 }

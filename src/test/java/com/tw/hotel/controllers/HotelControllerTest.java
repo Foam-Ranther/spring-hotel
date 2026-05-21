@@ -1,7 +1,6 @@
 package com.tw.hotel.controllers;
 
 
-import com.tw.hotel.repository.HotelRepository;
 import com.tw.hotel.service.HotelService;
 import com.tw.hotel.views.BookHotelRequest;
 import com.tw.hotel.views.BookingView;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
@@ -26,12 +26,6 @@ import static org.mockito.Mockito.when;
 public class HotelControllerTest {
     @Autowired
     private RestTestClient client;
-
-    @Autowired
-    private HotelRepository hotelRepository;
-    @Autowired
-    private HotelService hotelService;
-
     @Test
     void shouldListHotelsUponSearch() {
 

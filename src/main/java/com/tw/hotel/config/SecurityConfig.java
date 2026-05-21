@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/login", "/api/search/**", "/api/users/login").permitAll()
+                        auth.requestMatchers("/login", "/api/**","/api/search/hotels", "/api/users/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(fl -> fl.loginProcessingUrl("/login"))
