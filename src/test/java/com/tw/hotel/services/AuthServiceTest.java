@@ -35,6 +35,7 @@ class AuthServiceTest {
         UserDetails response = authService.loadUserByUsername(userRequest.username());
         assertEquals(user, response);
 
+<<<<<<< Updated upstream
     }
 
     @Test
@@ -45,4 +46,13 @@ class AuthServiceTest {
         UserRequest userRequest = new UserRequest("test", "test@1234");
         assertThrows(UsernameNotFoundException.class, () -> authService.loadUserByUsername(userRequest.username()));
     }
+=======
+  @Test
+  void shouldThrowErrorLoginUserWhenProvidedWithInvalidUserNameAndPassword() {
+    ConcurrentHashMap<String, UserDetails> users = new ConcurrentHashMap<>();
+    AuthService authService = new AuthService(users);
+    UserRequest userRequest = new UserRequest("test", "test@1234");
+    assertThrows(UsernameNotFoundException.class, () -> authService.loadUserByUsername(userRequest.username()));
+  }
+>>>>>>> Stashed changes
 }
