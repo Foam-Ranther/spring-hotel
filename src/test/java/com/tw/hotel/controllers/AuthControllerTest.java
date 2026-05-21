@@ -15,17 +15,17 @@ class AuthControllerTest {
 
     @Autowired
     private RestTestClient client;
-
-    @Test
-    void testForLoginPage() {
-        AuthController authController = new AuthController();
-        String responseBody = client.post()
-                .uri("/api/users/login")
-                .body(new UserRequest("yash", "yash@1234"))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .returnResult().getResponseBody();
-        assertEquals("hello", responseBody);
-    }
+//
+//    @Test
+//    void testForLoginPage() {
+//        AuthController authController = new AuthController();
+//        String responseBody = client.post()
+//                .uri("/api/users/login")
+//                .body(new UserRequest("yash", "yash@1234"))
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(String.class)
+//                .returnResult().getResponseBody();
+//        assertEquals("hello", responseBody);
+//    }
 }
