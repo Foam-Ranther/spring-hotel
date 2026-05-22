@@ -1,8 +1,8 @@
 package com.tw.hotel.config;
 
+import com.tw.hotel.models.User;
 import com.tw.hotel.repository.UserRepository;
 import com.tw.hotel.services.AuthService;
-import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthService appUserDetailsService(PasswordEncoder passwordEncoder, UserRepository users) {
+        users.save(new User("test", "test@1234"));
         return new AuthService(passwordEncoder,users);
     }
 
