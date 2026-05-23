@@ -20,3 +20,19 @@ export const bookHotelHandler = async (c: Context) => {
     "rooms": hotelData.rooms,
   });
 };
+
+export const searchHotelsHandler = async (c: Context) => {
+  const bookingRepo = c.get("bookingRepo");
+  const redisClient = c.get("redisClient");
+  const hotels = await redisClient.get("hotels"); 
+  console.log({hotels}); 
+  if (hotels) {
+    return c.json(JSON.parse(hotels)); 
+  }
+  const city = c.req.param("city"); 
+  const result = await bookingRepo.searchHotel(city);
+  await redisClient.set("hotels", JSON.stringify(result), {EX : 20})
+  return c.json(result); 
+};
+
+
