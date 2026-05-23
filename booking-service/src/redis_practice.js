@@ -11,6 +11,7 @@ const users = ["yash", "amy"];
 await client.set("users", JSON.stringify(users), {
   EX: 20,
 });
+
 const data = await client.get("users");
 console.log(
   `retreived data : ${JSON.parse(data)}, time left ${await client.ttl("users")}`,
