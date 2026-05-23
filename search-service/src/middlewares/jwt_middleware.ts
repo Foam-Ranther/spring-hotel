@@ -16,8 +16,8 @@ export const authMiddleware = async (
   }
 
   try {
-    const payload = await verify(token, SECRET, "HS512");
-    // console.log(payload, Deno.env.get("JWT_SECRET"));
+    const payload = await verify(token, SECRET, "HS256");
+    console.log(payload, Deno.env.get("JWT_SECRET"));
     ctxt.set("jwtPayload", payload);
     await next();
   } catch {

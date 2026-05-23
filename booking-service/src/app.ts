@@ -1,14 +1,14 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import { createClient } from "redis";
 
-import { bookHotelHandler, listBookingsHandler, searchHotelsHandler } from "./handlers/handlers.ts";
+import { bookHotelHandler, listBookingsHandler } from "./handlers/handlers.ts";
 import { BookingRepository } from "./repository/booking_respository.ts";
 import { authMiddleware } from "./middlewares/jwt_middleware.ts";
-import { createClient, RedisClientType, RedisClusterType } from "redis";
 
 type Variables = {
   bookingRepo: BookingRepository;
-  redisClient: any;
+  redisClient: any
 };
 
 export const createApp = (bookingRepo: BookingRepository) => {
@@ -29,7 +29,7 @@ export const createApp = (bookingRepo: BookingRepository) => {
   });
 
   app.get("api/bookings", authMiddleware, listBookingsHandler);
-  app.post("api/bookings", bookHotelHandler);
-  app.get("/api/search/hotels", searchHotelsHandler); 
+  app.post("api/bookings",authMiddleware, bookHotelHandler);
+
   return app;
 };

@@ -24,15 +24,4 @@ export class BookingRepository {
     const bookingList = await this.#collection.find({userId: username}).toArray();
     return bookingList
   }
-
-  time(duration: number) {
-    return new Promise((res)=> setTimeout(() =>res(1234), duration * 1000))
-  }
-
-  async searchHotel(city: string) {
-    await this.time(3); 
-    // const bookingList = await this.#collection.find({userId: username}).toArray();
-    return ['Hotel Plaza', 'Hotel Ritz', 'Hotel Marriott'];
-  }
-
 }
