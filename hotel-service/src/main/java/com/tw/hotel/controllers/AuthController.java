@@ -1,0 +1,38 @@
+package com.tw.hotel.controllers;
+
+import com.tw.hotel.dto.UserRequest;
+import com.tw.hotel.services.AuthService;
+import com.tw.hotel.services.JwtService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/users")
+public class AuthController {
+  private static final long EXPIRATION_TIME = 3600;
+  private final AuthService authService;
+  private JwtService jwtService;
+
+  public AuthController(AuthService authService, JwtService jwtService)  {
+    this.authService = authService;
+    this.jwtService = jwtService;
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> login (@RequestBody UserRequest user) {
+    if (authService.loginUser(user)) {
+      String token = jwtService.generateToken(user.username());
+      return ResponseEntity.ok()
+              .header("Authorization", "Bearer " + token)
+              .body("Login successful");
+    };
+    return null;
+  }
+  @PostMapping("/register")
+  public String register (@RequestBody UserRequest user) {
+    return authService.registerUser(user);
+  }
+}
