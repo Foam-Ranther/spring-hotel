@@ -1,10 +1,14 @@
 import {MongoClient} from "mongodb";
 
-const dbUrl:string = Deno.env.get("MONGO_DB_URL")! || "mongodb://localhost:27017/spring-hotel"; 
+const dbUrl:string = Deno.env.get("MONGO_URL") || "mongodb://localhost:27017/spring-hotel";
 
 const client = new MongoClient(dbUrl);
-await client.connect( );
-
-const db = client.db("postsDb");
+try {
+    await client.connect();
+    console.log(" \n Mongo connected \n");
+} catch (err) {
+    console.error("Mongo connection failed:", err);
+}
+const db = client.db("spring-hotel");
 
 export default  db

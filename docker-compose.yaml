@@ -1,4 +1,5 @@
 services:
+
   nginx:
     image: nginx:latest
     container_name: nginx-loadbalancer
@@ -10,41 +11,179 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
     depends_on:
-      - server
+      - auth-server
+      - booking-server
+      - receipt-server
+      - search-server
 
     networks:
       - backend
 
-  server:
-    build: .
+  auth-server:
+    build: ./auth-service
     depends_on:
       - mongo
-    networks:
-      - backend
+
     environment:
       MONGO_URL: mongodb://mongo:27017/spring-hotel
-    deploy:
-      replicas: 3
+      REDIS_HOST: redis://redis:6379/
 
-  mongo:
-    image: mongo:7
-    container_name: mongodb
+    networks:
+      - backend
+
+  booking-server:
+    build: ./booking-service
+    depends_on:
+      - mongo
+      - redis
 
     environment:
-      MONGO_INITDB_DATABASE: appdb
+      MONGO_URL: mongodb://mongo:27017/
+      REDIS_HOST: redis://redis:6379/
 
-    expose:
-      - "3000"
+    networks:
+      - backend
 
+  receipt-server:
+    build: ./receipt-service
+    depends_on:
+      - mongo
+      - redis
+
+    environment:
+      MONGO_URL: mongodb://mongo:27017/
+      REDIS_HOST: redis://redis:6379
+
+    networks:
+      - backend
+
+  search-server:
+    build: ./search-service
+    depends_on:
+      - mongo
+      - redis
+
+    environment:
+      MONGO_URL: mongodb://mongo:27017/
+      REDIS_HOST: redis://redis:6379/
+
+    networks:
+      - backend
+
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+
+    ports:
+      - "27017:27017"
+
+    environment:
+      MONGO_INITDB_DATABASE: spring-hotel
 
     volumes:
-      - mongo_data:/data/db
+      - mongo_data_new:/data/db
+
+    networks:
+      - backend
+
+  redis:
+    image: redis:7
+    container_name: redis
+
+    ports:
+      - "6379:6379"
 
     networks:
       - backend
 
 volumes:
-  mongo_data:
+  mongo_data_new:
 
 networks:
   backend:
+
+#services:
+#  nginx:
+#    image: nginx:latest
+#    container_name: nginx-loadbalancer
+#
+#    ports:
+#      - "3000:80"
+#
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+#
+#    depends_on:
+#      - auth-server
+#      - booking-server
+#      - receipt-server
+#      - search-server
+#
+#    networks:
+#      - backend
+#
+#  auth-server:
+#    build: ./auth-service
+#    depends_on:
+#      - mongo
+#    networks:
+#      - backend
+#    environment:
+#      MONGO_URL: mongodb://mongo:27017/spring-hotel
+#    deploy:
+#      replicas: 3
+#
+#  booking-server:
+#    build: ./booking-service
+#    depends_on:
+#      - mongo
+#    networks:
+#      - backend
+#    environment:
+#      MONGO_URL: mongodb://mongo:27017/spring-hotel
+#    deploy:
+#      replicas: 3
+#
+#  receipt-server:
+#    build: ./receipt-service
+#    depends_on:
+#      - mongo
+#    networks:
+#      - backend
+#    environment:
+#      MONGO_URL: mongodb://mongo:27017/spring-hotel
+#    deploy:
+#      replicas: 3
+#
+#  search-server:
+#    build: ./search-service
+#    depends_on:
+#      - mongo
+#    networks:
+#      - backend
+#    environment:
+#      MONGO_URL: mongodb://mongo:27017/spring-hotel
+#    deploy:
+#      replicas: 3
+#
+#  mongo:
+#    image: mongo:7
+#    container_name: mongodb
+#
+#    environment:
+#      MONGO_INITDB_DATABASE: appdb
+#
+#    expose:
+#      - "27017"
+#
+#    volumes:
+#      - mongo_data:/data/db
+#
+#    networks:
+#      - backend
+#
+#volumes:
+#  mongo_data:
+#
+#networks:
+#  backend:

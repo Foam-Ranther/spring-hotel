@@ -2,7 +2,7 @@ spring:
   application:
     name: demo
   mongodb:
-    uri: mongodb://localhost:27017/spring-hotel
+    uri: ${MONGO_URL:mongodb://localhost:27017/spring-hotel}
 #    uri: mongodb://mongo:27017/spring-hotel
 
 security:

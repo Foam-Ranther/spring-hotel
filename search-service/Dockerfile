@@ -1,0 +1,12 @@
+FROM denoland/deno:2.7.1
+
+WORKDIR /app
+
+COPY . .
+
+# Cache dependencies
+RUN deno install
+
+EXPOSE 3001
+
+CMD ["deno", "run", "-A", "main.ts"]

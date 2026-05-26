@@ -2,7 +2,7 @@ import { createClient } from "redis";
 
 const main = async () => {
   const client = createClient({
-    url: "redis://localhost:6379", 
+    url: Deno.env.get("REDIS_HOST") || "redis://localhost:6379",
   });
 
   client.on("error", (err) => console.error("Redis Client Error", err));

@@ -14,7 +14,7 @@ export const createApp = (hotelRepo: HotelRepository) => {
   const app = new Hono<{ Variables: Variables }>();
 
   const client = createClient({
-    url: "redis://localhost:6379",
+    url: Deno.env.get("REDIS_HOST") || "redis://localhost:6379",
   });
 
   client.connect(); 
